@@ -1,9 +1,23 @@
 use crate::data::Data;
 pub use crate::trait_def::*;
-use openbrush::traits::Storage;
+use openbrush::{
+    contracts::{
+        psp34::extensions::enumerable::*,
+    },
+    traits::Storage,
+};
+use openbrush::contracts::psp34::Id;
 
-impl<T: Storage<Data>> CustomTrait for T {
-    default fn dummy(&mut self) -> bool {
-        self.data::<Data>().dummy
+
+impl<T> CustomTrait for T
+    where
+        T: Storage<Data>
+        + Storage<psp34::Data>
+{
+    default fn dummy(&mut self) -> Result<(), PSP34Error> {
+        self.data::<psp34::Data>()
+            .owner_of(Id::U8(0))
+            .ok_or(PSP34Error::TokenNotExists)?;
+        Ok(())
     }
 }

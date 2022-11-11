@@ -1,8 +1,9 @@
-use crate::data::Data;
-use openbrush::traits::Storage;
+use openbrush::{
+    contracts::psp34::PSP34Error,
+};
 
 #[openbrush::trait_definition]
-pub trait CustomTrait: Storage<Data> {
-    #[ink(message)]
-    fn dummy(&mut self) -> bool;
+pub trait CustomTrait {
+    #[ink(message, payable)]
+    fn dummy(&mut self) -> Result<(), PSP34Error>;
 }
